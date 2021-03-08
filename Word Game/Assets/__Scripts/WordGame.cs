@@ -57,15 +57,12 @@ public class WordGame : MonoBehaviour
         {
             // Выбрать случайный уровень
             level.longWordIndex = Random.Range(0, WordList.LONG_WORD_COUNT);
-            Debug.Log(level.longWordIndex);
         } else
         {
 
         }
         level.levelNum = levelNum;
-        Debug.Log("1");
         level.word = WordList.GET_LONG_WORD(level.longWordIndex); //
-        Debug.Log("2");
         level.charDict = WordLevel.MakeCharDict(level.word);
 
         StartCoroutine(FindSubWordsCoroutine(level));

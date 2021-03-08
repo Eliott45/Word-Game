@@ -56,8 +56,15 @@ public class WordList : MonoBehaviour
         {
             word = lines[currLine];
 
+            // Если длина слова равна wordLenght
+            if (word.Length == wordLenghtMax)
+            {
+                longWords.Add(word);
+            }
+
+
             // Если длина слова равна wordLenghtMax добавить его в список допустимых слов
-            if(word.Length >= wordLenghtMin && word.Length <= wordLenghtMax)
+            if (word.Length >= wordLenghtMin && word.Length <= wordLenghtMax)
             {
                 words.Add(word);
             }
@@ -72,13 +79,13 @@ public class WordList : MonoBehaviour
                 yield return null;
 
                 // Инструкция yield приостановит выполнение этого метода, даст возможность выполниться другому коду и возобновит выполнение сопрограммы с этой точки, начав слудующую итерациию цикла for
-
-                // Послать игровому объекту gameObject сообщение об окончании анализа
-                gameObject.SendMessage("WordListParseComplete");
             }
         }
         longWordCount = longWords.Count;
         wordCount = words.Count;
+
+        // Послать игровому объекту gameObject сообщение об окончании анализа
+        gameObject.SendMessage("WordListParseComplete");
     }
 
     // Эти методы позволяют другим классам обращаться к скрытым полям List<string>

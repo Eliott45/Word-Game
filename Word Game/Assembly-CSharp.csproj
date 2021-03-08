@@ -8,8 +8,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <ProjectGuid>{0B41308E-C13C-D484-EBF0-60CD5EDE3FDE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -62,10 +61,11 @@
     <Compile Include="Assets\__Scripts\ProtoTools\FloatingScore.cs" />
     <Compile Include="Assets\__Scripts\ProtoTools\Scoreboard.cs" />
     <Compile Include="Assets\__Scripts\WordList.cs" />
+    <Compile Include="Assets\__Scripts\WordGame.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Resources\2of12inf.txt" />
-    <None Include="Assets\Materials &amp; Textures\UnlitAlpha.shader" />
+     <None Include="Assets\Resources\2of12inf.txt" />
+     <None Include="Assets\Materials &amp; Textures\UnlitAlpha.shader" />
     <Reference Include="UnityEngine">
       <HintPath>N:\programms\ForProgramming\2020.1.0f1\2020.2.1f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

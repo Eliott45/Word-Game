@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class WordList : MonoBehaviour
 {
     private static WordList S;
@@ -28,12 +29,17 @@ public class WordList : MonoBehaviour
         S = this;
     }
 
-    private void Start()
+    private void Init()
     {
         lines = wordListText.text.Split('\n');
         totalLines = lines.Length;
 
         StartCoroutine(ParseLines());
+    }
+
+    static public void INIT()
+    {
+        S.Init();
     }
 
     /// <summary>
@@ -66,6 +72,9 @@ public class WordList : MonoBehaviour
                 yield return null;
 
                 // Инструкция yield приостановит выполнение этого метода, даст возможность выполниться другому коду и возобновит выполнение сопрограммы с этой точки, начав слудующую итерациию цикла for
+
+                // Послать игровому объекту gameObject сообщение об окончании анализа
+                gameObject.SendMessage("WordListParseComplete");
             }
         }
         longWordCount = longWords.Count;

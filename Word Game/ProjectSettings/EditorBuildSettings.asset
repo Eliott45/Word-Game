@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/__WordGame_Scene_0.unity
+    guid: 71b3942c7a4794ef8ac171268f62e219
   m_configObjects: {}

@@ -20,12 +20,18 @@ public class WordGame : MonoBehaviour
     public GameObject prefabLetter;
     public Rect wordArea = new Rect(-24, 19, 48, 28);
     public float letterSize = 1.5f;
-    public bool showAllWyrds = true; 
+    public bool showAllWyrds = true;
+    public float bigLetterSize = 4f;
+    public Color bigColorDim = new Color(0.8f, 0.8f, 0.8f);
+    public Color bigColorSelected = new Color(1f, 0.9f, 0.7f);
+    public Vector3 bigLetterCenter = new Vector3(0, -16, 0);
 
     [Header("Set Dynamically")]
     public GameMode mode = GameMode.preGame;
     public WordLevel currLevel;
     public List<Wyrd> wyrds;
+    public List<Letter> bigLetters;
+    public List<Letter> bigLettersActive;
 
     private Transform letterAnchor, bigLetterAnchor;
 
@@ -173,6 +179,81 @@ public class WordGame : MonoBehaviour
             {
                 left += (columnWidth + 0.5f) * letterSize;
             }
+        }
+
+        // Поместить на экран большие плитки с буквами
+        // Инициализировать список больших букв
+        bigLetters = new List<Letter>();
+        bigLettersActive = new List<Letter>();
+
+        // Создать большую плитку для каждой буквы в целевом слове
+        for (int i = 0; i < currLevel.word.Length; i++)
+        {
+            // Напоминает процедурур создания маленьких плиток 
+            c = currLevel.word[i];
+            go = Instantiate<GameObject>(prefabLetter);
+            go.transform.SetParent(bigLetterAnchor);
+            lett = go.GetComponent<Letter>();
+            lett.c = c;
+            go.transform.localScale = Vector3.one * bigLetterSize;
+
+            // Первоначально поместить большие плитки ниже края экрана
+            pos = new Vector3(0, -100, 0);
+            lett.pos = pos;
+            col = bigColorDim;
+            lett.color = col;
+            lett.visible = true;
+            lett.big = true;
+            bigLetters.Add(lett);
+        }
+
+        // Перемешать плитки
+        bigLetters = ShuffleLetters(bigLetters);
+
+        // Вывести на экран
+        ArrangeBigLetters();
+
+        // Установить режим mode -- "в игре"
+        mode = GameMode.inLevel;
+    }
+
+    /// <summary>
+    /// Перемешивает элементы в списке и вовращает результат
+    /// </summary>
+    List<Letter> ShuffleLetters(List<Letter> letts)
+    {
+        List<Letter> newL = new List<Letter>();
+        int ndx;
+        while(letts.Count > 0) {
+            ndx = Random.Range(0, letts.Count);
+            newL.Add(letts[ndx]);
+            letts.RemoveAt(ndx);
+        }
+        return (newL);
+    }
+
+    /// <summary>
+    /// Выводит большие плитки на экран
+    /// </summary>
+    void ArrangeBigLetters()
+    {
+        // Найти середину для вывода ряда больших плиток с центрированием по горизонтали
+        float halfWidth = ((float)bigLetters.Count) / 2f - 0.5f;
+        Vector3 pos;
+        for (int i = 0; i < bigLetters.Count; i++)
+        {
+            pos = bigLetterCenter;
+            pos.x += (i - halfWidth) * bigLetterSize;
+            bigLetters[i].pos = pos;
+        }
+
+        halfWidth = ((float)bigLettersActive.Count) / 2f - 0.5f;
+        for (int i = 0; i< bigLettersActive.Count; i++)
+        {
+            pos = bigLetterCenter;
+            pos.x += (i - halfWidth) * bigLetterSize;
+            pos.y += bigLetterSize * 1.25f;
+            bigLettersActive[i].pos = pos;
         }
     }
 }

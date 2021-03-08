@@ -192,7 +192,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 805ce76972dc3a748a7d9d8f569a8c38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabLetter: {fileID: 8953351383826729479, guid: ee692b5089aaf814591e639e1c9a6415, type: 3}
+  wordArea:
+    serializedVersion: 2
+    x: -24
+    y: 19
+    width: 48
+    height: 28
+  letterSize: 1.5
+  showAllWyrds: 1
   mode: 0
+  currLevel:
+    levelNum: 0
+    longWordIndex: 0
+    word: 
+    subWords: []
 --- !u!20 &345694714
 Camera:
   m_ObjectHideFlags: 0

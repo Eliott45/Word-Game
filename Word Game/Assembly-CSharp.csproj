@@ -62,6 +62,7 @@
     <Compile Include="Assets\__Scripts\ProtoTools\Scoreboard.cs" />
     <Compile Include="Assets\__Scripts\WordList.cs" />
     <Compile Include="Assets\__Scripts\WordGame.cs" />
+    <Compile Include="Assets\__Scripts\WordLevel.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Resources\2of12inf.txt" />

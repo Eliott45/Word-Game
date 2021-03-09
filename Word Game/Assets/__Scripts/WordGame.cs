@@ -32,6 +32,8 @@ public class WordGame : MonoBehaviour
     public List<Wyrd> wyrds;
     public List<Letter> bigLetters;
     public List<Letter> bigLettersActive;
+    public string testWord;
+    public string upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private Transform letterAnchor, bigLetterAnchor;
 
@@ -255,5 +257,169 @@ public class WordGame : MonoBehaviour
             pos.y += bigLetterSize * 1.25f;
             bigLettersActive[i].pos = pos;
         }
+    }
+
+    private void Update()
+    {
+        // Объявить пару вспомогательных переменных
+        Letter ltr;
+        char c;
+
+        switch(mode)
+        {
+            case GameMode.inLevel:
+                // Выполнить обход всех символов, введенных игроком в этом кадре
+                foreach (char cIt in Input.inputString)
+                {
+                    // Преобразовать в верхний регистр
+                    c = System.Char.ToUpperInvariant(cIt);
+
+                    // Проверить, есть ли такая буква верхнего регистра
+                    if (upperCase.Contains(c))
+                    {
+                        // Найти доступную плитку с этой буквой 
+                        ltr = FindNextLetterByChar(c);
+                        // Если плитка найдена 
+                        if (ltr != null)
+                        {
+                            // Добавить этот символ в testWord и переместить соответствующую плитку Letter в bigLettersActive
+                            testWord += c.ToString();
+                            // Переместить из списка неактивных в список активных плиток
+                            bigLettersActive.Add(ltr);
+                            bigLetters.Remove(ltr);
+                            ltr.color = bigColorSelected; // Придать плитке активный вид 
+                            ArrangeBigLetters(); // Отобразить плитки
+                        }
+                    }
+
+                    if (c == '\b') // Backspace
+                    {
+                        // Удалить последнюю плитку Letter из bigLetterActive
+                        if (bigLettersActive.Count == 0) return;
+                        if (testWord.Length > 1)
+                        {
+                            // Удалить последнюю букву из testWord
+                            testWord = testWord.Substring(0, testWord.Length - 1);
+                        } else
+                        {
+                            testWord = "";
+                        }
+
+                        ltr = bigLettersActive[bigLettersActive.Count - 1];
+                        // Переместить из списка активных в список неактивных плиток
+                        bigLettersActive.Remove(ltr);
+                        bigLetters.Add(ltr);
+                        ltr.color = bigColorDim; // Придать плитке неактиный вид
+                        ArrangeBigLetters(); // Отобразить плитки
+                    }
+
+                    if (c == '\n' || c == '\r') // Return/Enter
+                    {
+                        // Проверить наличие сконструированного слова в WordLevel
+                        CheckWord();
+                    }
+
+                    if(c == ' ') // Space
+                    {
+                        // Перемешать плитки в bigLetters
+                        bigLetters = ShuffleLetters(bigLetters);
+                        ArrangeBigLetters();
+                    }
+                }
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Этот метод отыскивает плитку Letter с символом с в bigLetters
+    /// </summary>
+    Letter FindNextLetterByChar(char c)
+    {
+        // Проверить каждую плитку Letter в bigLetters
+        foreach (Letter ltr in bigLetters)
+        {
+            // Если содержит тот же символ, что указан в с
+            if(ltr.c == c)
+            {
+                // то вернуть его
+                return (ltr);
+            }
+        }
+        return null; // Иначе
+    }
+
+    public void CheckWord()
+    {
+        // Проверяет присутвие слова testWord в списке level.subWords
+        string subWord;
+        bool foundTestWord = false;
+
+        // Создать списко для хранения индексов других слов, присутствующих в testWord
+        List<int> containedWords = new List<int>();
+
+        // Обойти все слова в currLevel.subWords
+        for(int i = 0; i < currLevel.subWords.Count; i++)
+        {
+            // Проверить, было ли уже найдено Wyrd 
+            if (wyrds[i].found)
+            {
+                continue;
+            }
+
+            subWord = currLevel.subWords[i];
+            // Проверить, входит ли это слово subWord в testWord
+            if (string.Equals(testWord,subWord))
+            {
+                HighlightWyrd(i);
+                ScoreManager.SCORE(wyrds[i], 1); // Подситать очки
+                foundTestWord = true;
+            } else if (testWord.Contains(subWord))
+            {
+                containedWords.Add(i);
+            }
+        }
+
+        if (foundTestWord) // Если проверяемое слово присутствует в списке подсветить другие слова, содержащиеся в testWord
+        {
+            int numContained = containedWords.Count;
+            int ndx;
+            // Подсвечивать слова в обратном порядке
+            for (int i = 0; i < containedWords.Count; i++)
+            {
+                ndx = numContained - i - 1;
+                HighlightWyrd(containedWords[ndx]);
+                ScoreManager.SCORE(wyrds[containedWords[ndx]], i + 2);
+            }
+        }
+
+        // Очистить список актиных плиток Letters
+        ClearBigLettersActive();
+    }
+    
+    /// <summary>
+    /// Подвечивает экземпляр Wyrd
+    /// </summary>
+    void HighlightWyrd(int ndx)
+    {
+        // Активировать слово
+        wyrds[ndx].found = true; // Установить признак, что оно найдено
+        // Выделить цветом
+        wyrds[ndx].color = (wyrds[ndx].color + Color.white) / 2f;
+        wyrds[ndx].visible = true; // Сделать компонент 3D text видимым
+    }
+
+    /// <summary>
+    /// Удаляет все плитки Letter из bigLettersActive
+    /// </summary>
+    void ClearBigLettersActive()
+    {
+        testWord = ""; // Очистить 
+        foreach (Letter ltr in bigLettersActive)
+        {
+            bigLetters.Add(ltr); // Добавить каждую плитку в bigLetters
+            ltr.color = bigColorDim; // Придать ей неактивный вид
+        }
+        bigLettersActive.Clear(); // Очистить список
+        ArrangeBigLetters(); // Повторно вывести плитки на экран
     }
 }

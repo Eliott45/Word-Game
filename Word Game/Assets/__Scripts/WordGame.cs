@@ -166,7 +166,13 @@ public class WordGame : MonoBehaviour
                 // Выстроить плитку по вертикали
                 pos.y -= (i % numRows) * letterSize;
 
+                // Переместить плитку lett немедленно за верхний край экрана 
+                lett.posImmediate = pos + Vector3.up * (20 + i % numRows);
+
+                // Затем начать ее перемещение в новую позицию
                 lett.pos = pos;
+                // Увеличить lett.timeStart для перемещения слов в разные времена
+                lett.timeStart = Time.time + i * 0.05f;
 
                 go.transform.localScale = Vector3.one * letterSize;
                 wyrd.Add(lett);
@@ -201,7 +207,10 @@ public class WordGame : MonoBehaviour
 
             // Первоначально поместить большие плитки ниже края экрана
             pos = new Vector3(0, -100, 0);
+            lett.posImmediate = pos;
             lett.pos = pos;
+            lett.timeStart = Time.time + currLevel.subWords.Count * 0.05f;
+            lett.easingCuve = Easing.Sin + "-0.18";
             col = bigColorDim;
             lett.color = col;
             lett.visible = true;

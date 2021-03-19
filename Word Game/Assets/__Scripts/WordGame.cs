@@ -25,6 +25,7 @@ public class WordGame : MonoBehaviour
     public Color bigColorDim = new Color(0.8f, 0.8f, 0.8f);
     public Color bigColorSelected = new Color(1f, 0.9f, 0.7f);
     public Vector3 bigLetterCenter = new Vector3(0, -16, 0);
+    public Color[] wyrdPalette; 
 
     [Header("Set Dynamically")]
     public GameMode mode = GameMode.preGame;
@@ -180,6 +181,9 @@ public class WordGame : MonoBehaviour
 
             if (showAllWyrds) wyrd.visible = true;
 
+            // Определить цвет слова, исходя из его длины
+
+            wyrd.color = wyrdPalette[word.Length - WordList.WORD_LENGHT_MIN];
             wyrds.Add(wyrd);
 
             // Если достигнут последний ряд в столбце, начать новый столбей

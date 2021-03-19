@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/_WordGame_Menu.unity
+    guid: f98b1e6eeb6a5a44e913e5139d9a534f
+  - enabled: 1
     path: Assets/Scenes/__WordGame_Scene_0.unity
     guid: 71b3942c7a4794ef8ac171268f62e219
   m_configObjects: {}

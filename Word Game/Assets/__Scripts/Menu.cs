@@ -19,6 +19,7 @@ public class Menu : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
+        PlayerPrefs.SetInt("UIRecord", 0);
         SceneManager.LoadScene("__WordGame_Scene_0");
         DontDestroyOnLoad(music);
         

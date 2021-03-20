@@ -47,6 +47,9 @@ public class Pause : MonoBehaviour
 
     public void Restart()
     {
+        // Cбросить счет
+        PlayerPrefs.SetInt("UIRecord", 0);
+
         SceneManager.LoadScene("__WordGame_Scene_0");
         DontDestroyOnLoad(music);
     }

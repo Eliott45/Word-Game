@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -10,10 +11,14 @@ public class Scoreboard : MonoBehaviour {
 
     [Header("Set in Inspector")]
     public GameObject       prefabFloatingScore;
+    public Button nextBTN;
 
     [Header("Set Dynamically")]
     [SerializeField] private int    _score = 0;
     [SerializeField] private string _scoreString;
+    static public int scoreSave = 0;
+    public int nowChain;
+    public GameObject music;
 
     private Transform       canvasTrans;
 
@@ -46,6 +51,19 @@ public class Scoreboard : MonoBehaviour {
             Debug.LogError("ERROR: Scoreboard.Awake(): S is already set!");
         }
         canvasTrans = transform.parent;
+        nextBTN.interactable = false;
+        music = GameObject.Find("Music");
+
+        if (PlayerPrefs.HasKey("UIRecord"))
+        {
+            nowChain = PlayerPrefs.GetInt("UIRecord");
+        }
+        // Сохранить рекорд в хранилище 
+        PlayerPrefs.SetInt("UIRecord", scoreSave);
+        if(nowChain != 0)
+        {
+            score = nowChain;
+        }
     }
 
     // When called by SendMessage, this adds the fs.score to this.score
@@ -64,5 +82,20 @@ public class Scoreboard : MonoBehaviour {
         fs.reportFinishTo = this.gameObject; // Set fs to call back to this
         fs.Init(pts);
         return(fs);
+    }
+
+    public void NextLevel()
+    {
+        SceneManager.LoadScene("__WordGame_Scene_0");
+        PlayerPrefs.SetInt("UIRecord", _score);
+        DontDestroyOnLoad(music);
+    }
+
+    public void Update()
+    {
+        if(_score >= 3)
+        {
+            nextBTN.interactable = true;
+        }
     }
 }
